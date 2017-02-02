@@ -39,9 +39,9 @@ class LogStash::Filters::Custom_modsec < LogStash::Filters::Base
     return unless filter?(event)
      begin
 
-     if !event['message'].nil?
+     if !event.get('message').nil?
 
-         modSecSectionData = event['message'].split(/(?:--[a-fA-F0-9]{8}-([A-Z])--)/)
+         modSecSectionData = event.get('message').split(/(?:--[a-fA-F0-9]{8}-([A-Z])--)/)
          modSecSectionData.shift
          for i in 0..((modSecSectionData.length-1)/2)
              sectionName = 'rawSection'.concat(modSecSectionData.shift)
@@ -69,7 +69,7 @@ class LogStash::Filters::Custom_modsec < LogStash::Filters::Base
                extractVal(/\[data \"(.*?)\"\]/, entry, msg, 'data')
                extractVal(/\[tag \"(.*?)\"\]/, entry, msg, 'tag')
                e =  LogStash::Event.new("@version" => "1",
-                                        "@timestamp" => event["timestamp"],
+                                        "@timestamp" => event.get("timestamp"),
                                         "info" => msg['info'],
                                         "file" => msg['file'],
                                         "line" => msg['line'],
